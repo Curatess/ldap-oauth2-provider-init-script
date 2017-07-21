@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sleep 10
+sudo echo `sudo docker ps -aqf "name=ldapoauth2providerinitscript_app"` > /var/log/LDAP-OAuth2-Provider.log

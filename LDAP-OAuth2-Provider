@@ -1,0 +1,77 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          LDAP-OAuth2-Provider
+# Required-Start:    $local_fs $network $named $time $syslog
+# Required-Stop:     $local_fs $network $named $time $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       An OAuth2 Provider using JSON Web Tokens and authenticating against Active Directory, Open Directory and LDAP-based directories.
+### END INIT INFO
+
+SCRIPT="placeholder_init_path/docker-compose-init"
+
+start() {
+  local DOCKER_PROCESS=`cat /var/log/LDAP-OAuth2-Provider.log`
+  if [ -n "${DOCKER_PROCESS}" ]; then
+    echo 'Service already running'
+    return 1
+  fi
+  echo 'Starting service…'
+  cd placeholder_init_path
+  placeholder_init_path/write-init-process-to-log &
+  echo ''
+  echo 'The LDAP service is now running. You can locate its process ID with `docker ps`.'
+  echo ''
+  echo 'We recommend you test the OAuth service with Postman or another API client.'
+  echo ''
+  echo 'You can stop the service with the command `/etc/init.d/LDAP-OAuth2-Provider stop`'
+  echo ''
+  echo 'You can start the service with the command `/etc/init.d/LDAP-OAuth2-Provider start`'
+  echo ''
+  echo 'You can restart the service with the command `/etc/init.d/LDAP-OAuth2-Provider restart`'
+  echo ''
+  echo 'The service will also restart automatically when you restart your server'
+  echo ''
+  nohup $SCRIPT >/dev/null 2>&1  &
+}
+
+stop() {
+  local DOCKER_PROCESS=`cat /var/log/LDAP-OAuth2-Provider.log`
+  if [ -z "${DOCKER_PROCESS}" ]; then
+    echo 'Service is not running'
+    return 1
+  fi
+  echo 'Stopping service…'
+  sudo docker kill $DOCKER_PROCESS
+  echo 'Service stopped'
+  sudo echo '' > /var/log/LDAP-OAuth2-Provider.log
+}
+
+uninstall() {
+  echo -n "Are you really sure you want to uninstall this service? [yes|no] "
+  local SURE
+  read SURE
+  if [ "$SURE" = "yes" ]; then
+    update-rc.d -f LDAP-OAuth2-Provider remove
+  fi
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  uninstall)
+    uninstall
+    ;;
+  restart)
+    stop
+    sleep 5
+    start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|uninstall}"
+esac
