@@ -48,11 +48,11 @@ Once the OAuth2 server is running, you may want to test out the API endpoints. H
 
 1. Download [Postman](https://www.getpostman.com/) or another API client on your host machine
 
-!(postman-1)[images/postman-1.png]
+![postman-1](images/postman-1.png)
 
 2. Inside Postman, enter your request url (https://<your-domain>/api/tokens) and change 'GET' to 'POST'
 
-!(postman-2)[images/postman-2.png]
+![postman-2](images/postman-2.png)
 
 3. Click the 'Headers' tab, then set the following header types:
 
@@ -60,10 +60,11 @@ Once the OAuth2 server is running, you may want to test out the API endpoints. H
   * Accept: application/vnd.cfc-v1+json
   * Content-Type: application/vnd.api+json
 
-!(postman-3)[images/postman-3.png]
+![postman-3](images/postman-3.png)
 
 4. To test auth token creation, click the 'Body' tab, select the 'raw' radio button, and enter your test request in the following format:
 
+```
 {
   "data": {
     "attributes": {
@@ -73,15 +74,17 @@ Once the OAuth2 server is running, you may want to test out the API endpoints. H
     }
   }
 }
+```
 
-!(postman-4)[images/postman-4.png]
+![postman-4](images/postman-4.png)
 
 Press the 'Send' button. It should return some nice JSON API-compliant JSON with tokens if username and password can be authenticated against your LDAP directory. Copy the access and refresh tokens for the coming tests.
 
-!(postman-5)[images/postman-5.png]
+![postman-5](images/postman-5.png)
 
 5. To test auth token refreshing, copy the 'refresh-jwt' that was returned to you in the last request. Click the 'Body' tab again, select the 'raw' radio button, and enter your test request in the following format:
 
+```
 {
   "data": {
     "attributes": {
@@ -90,15 +93,17 @@ Press the 'Send' button. It should return some nice JSON API-compliant JSON with
     }
   }
 }
+```
 
-!(postman-6)[images/postman-6.png]
+![postman-6](images/postman-6.png)
 
 After you press 'Send', it should return some JSON, including a new access token.
 
-!(postman-7)[images/postman-7.png]
+![postman-7](images/postman-7.png)
 
 6. To test auth token validation, take one of the access tokens you received in the past requests. In the url bar, change the endpoint to 'https://<your-domain>/api/validations'. Change the method back to 'POST'. Click the 'Body' tab again, select the 'raw' radio button, and enter your test request in the following format:
 
+```
 {
   "data": {
     "attributes": {
@@ -107,12 +112,13 @@ After you press 'Send', it should return some JSON, including a new access token
     }
   }
 }
+```
 
-!(postman-8)[images/postman-8.png]
+![postman-8](images/postman-8.png)
 
 After you press 'Send', it should return some JSON, including whether or not the token was valid.
 
-!(postman-9)[images/postman-9.png]
+![postman-9](images/postman-9.png)
 
 ## API Documentation
 
