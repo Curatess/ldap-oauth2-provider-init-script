@@ -6,7 +6,7 @@ services:
       context: .
       args:
         - SSLDOMAIN=${SSLDOMAIN}
-    command: bash -c "redis-server --daemonize yes && rails db:migrate && foreman start"
+    command: bash -c "redis-server --daemonize yes && service cron start && rails db:migrate && foreman start"
     volumes:
         - ${VOLUMEMOUNTPATH}/cert:/etc/letsencrypt/live/${SSLDOMAIN}
         - ${VOLUMEMOUNTPATH}/settings.yml:/var/www/ldap-oauth2-provider/config/ldap_config.yml
