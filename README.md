@@ -3,15 +3,16 @@ An SSL-certified Docker container that translates LDAP/Active Directory logins t
 
 ## Setup Instructions
 
-1) Start with a Debian or Debian-based distro.
-2) Make sure ports 80, 443, and 636 are available and open.
-3) Install <a href="https://docs.docker.com/engine/installation/" target="_blank">Docker Engine</a> (Installation steps for Debian <a href="https://docs.docker.com/engine/installation/linux/debian/" target="_blank">here</a>).
-4) Install <a href="https://docs.docker.com/compose/install/" target="_blank">Docker Compose</a> (Installation steps <a href="https://github.com/docker/compose/releases" target="_blank">here</a> ).
-5) Install git (`apt-get install git`).
-6) Navigate to your /var directory (`cd /var`).
-7) Clone the repo into your /var directory (`git clone https://github.com/ConnectedforCare/ldap-oauth2-provider-init-script.git`).
-8) `cd ldap-oauth2-provider-init-script`.
-9) Gather the following settings requirements:
+1. Start with a Debian or Debian-based distro.
+2. Install ntp if necessary to synchronize clocks and minimize drift. `apt-get install ntp`. If clock drift is too great authentication will fail.
+3. Make sure ports 80, 443, and 636 are available and open.
+4. Install <a href="https://docs.docker.com/engine/installation/" target="_blank">Docker Engine</a> (Installation steps for Debian <a href="https://docs.docker.com/engine/installation/linux/debian/" target="_blank">here</a>).
+5. Install <a href="https://docs.docker.com/compose/install/" target="_blank">Docker Compose</a> (Installation steps <a href="https://github.com/docker/compose/releases" target="_blank">here</a> ).
+6. Install git (`apt-get install git`).
+7. Navigate to your /var directory (`cd /var`).
+8. Clone the repo into your /var directory (`git clone https://github.com/ConnectedforCare/ldap-oauth2-provider-init-script.git`).
+9. `cd ldap-oauth2-provider-init-script`.
+10. Gather the following settings requirements:
 
   - Hostname for your LDAP server. This must include a subdomain, domain, and top-level domain for the service to work properly (Ex: subdomain.domain.com).
   - The group on your LDAP server for the application to search within for user credentials. We recommend you create a custom group CN so you can easily add and remove users from our authentication service. For example, if the group you create in LDAP has a distinguishedName of CN=OAuthUsers,DC=domain,DC=tld, then here you would enter 'OAuthUsers'. Leave blank if not applicable.
@@ -21,15 +22,30 @@ An SSL-certified Docker container that translates LDAP/Active Directory logins t
   - The external domain name associated with the server running this OAuth2 Provider. The SSL certificate will verify this domain.
   - A JSON Web Token secret. If another organization will be running the application that will be consuming this LDAP service, use the JWT secret they have provided. If you are consuming this LDAP service internally within your organization, generate a secret and add it to the application that will be consuming the LDAP service. This is needed to validate and refresh <a href="https://jwt.io/" target="_blank">JSON web tokens</a> (Ex: 8Dnq4ulBoQoG01PYJEB8I52kDZFfXyk6).
 
-10) Run `sh setup.sh` and enter the required information.
-11) It will take several minutes for the script to build the Docker container.
-12) Once it's done, run this command to start up the container `/etc/init.d/LDAP-OAuth2-Provider start`. This will automatically start up the container and fetch its SSL certs. At any time, you can start, stop and restart this Docker container with the following commands:
+11. Run `sh setup.sh` and enter the required information.
+12. It will take several minutes for the script to build the Docker container.
+13. Once it's done, run this command to start up the container `/etc/init.d/LDAP-OAuth2-Provider start`. This will automatically start up the container and fetch its SSL certs. The Docker container will restart automatically if your server reboots.
 
-- `/etc/init.d/LDAP-OAuth2-Provider start`
-- `/etc/init.d/LDAP-OAuth2-Provider stop`
-- `/etc/init.d/LDAP-OAuth2-Provider restart`
+## Maintenance
 
-The Docker container will also restart automatically if your server reboots.
+Start the container: `/etc/init.d/LDAP-OAuth2-Provider start`
+
+Stop the container: `/etc/init.d/LDAP-OAuth2-Provider stop`
+
+Restart the container: `/etc/init.d/LDAP-OAuth2-Provider restart`
+
+Rebuild and restart the container:
+```
+docker-compose build
+/etc/init.d/LDAP-OAuth2-Provider restart
+```
+
+Force Docker to refetch the application, rebuild and restart the container:
+```
+In the Dockerfile, above the git clone command, add a new line: RUN a=a
+docker-compose build
+/etc/init.d/LDAP-OAuth2-Provider restart
+```
 
 ## How It Works
 
