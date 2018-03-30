@@ -32,6 +32,7 @@ RUN mkdir -p /etc/letsencrypt/$SSLDOMAIN
 WORKDIR /var/www
 RUN git clone https://github.com/ConnectedforCare/ldap-oauth2-provider.git
 WORKDIR ldap-oauth2-provider
+RUN touch log/sidekiq.log
 
 # Configure Rails
 RUN sed -i.bu "s/placeholderdomain/$SSLDOMAIN/g" config/puma.rb
