@@ -30,7 +30,7 @@ RUN mkdir -p /etc/letsencrypt/$SSLDOMAIN
 
 # Clone app github repo
 WORKDIR /var/www
-RUN git clone https://github.com/ConnectedforCare/ldap-oauth2-provider.git
+RUN git clone https://github.com/Curatess/ldap-oauth2-provider.git
 WORKDIR ldap-oauth2-provider
 RUN touch log/sidekiq.log
 
